@@ -1,0 +1,46 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Track Your Service Requests</h1>
+
+        {% if requests %}
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Request Type</th>
+                <th>Details</th>
+                <th>Attachment</th>
+                
+                <th>Status</th>
+                <th>Created At</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              {% for request in requests %}
+                <tr>
+                  <td>{{ request.request_type }}</td>
+                  <td>{{ request.description|truncatewords:10 }}</td>
+                  <td>
+                    {% if request.attachment %}
+                      <a href="{{ request.attachment.url }}" target="_blank">View Attachment</a>
+                    {% else %}
+                      No attachment
+                    {% endif %}
+                  </td>
+                  
+                  <td>{{ request.status }}</td>
+                  <td>{{ request.created_at }}</td>
+                 
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+            <p>You have no service requests at the moment.</p>
+        {% endif %}
+        
+        <a href="{% url 'create_request' %}" class="btn btn-primary">Create New Request</a>
+    </div>
+{% endblock %}

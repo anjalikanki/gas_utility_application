@@ -1,0 +1,14 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Resolve Service Request{% endblock %}
+
+{% block content %}
+  <h1>Resolve Service Request #{{ request.id }}</h1>
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <button type="submit" class="btn btn-success">Mark as Resolved</button>
+  </form>
+  <a href="{% url 'list_requests' %}" class="btn btn-secondary mt-3">Back to Service Requests List</a>
+{% endblock %}

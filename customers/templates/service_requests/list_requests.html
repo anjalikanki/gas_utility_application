@@ -1,0 +1,82 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}Service Requests List{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="mb-4">Service Requests List</h1>
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Request Type</th>
+          <th>Details</th>
+          <th>Attachment</th>
+          <th>Customer</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for request in requests %}
+          <tr>
+            <td>{{ request.id }}</td>
+            <td>{{ request.request_type }}</td>
+            <td>{{ request.description|truncatewords:10 }}</td>
+            <td>
+              {% if request.attachment %}
+                <a href="{{ request.attachment.url }}" target="_blank" class="btn btn-link">View</a>
+              {% else %}
+                <span class="text-muted">No attachment</span>
+              {% endif %}
+            </td>
+            <td>{{ request.customer }}</td>
+            <td>
+              {% if request.status == 'pending' %}
+                <span class="badge bg-warning">Pending</span>
+              {% else %}
+                <span class="badge bg-success">Resolved</span>
+              {% endif %}
+            </td>
+            <td>{{ request.created_at }}</td>
+            <td>
+              {% if request.status == 'pending' %}
+                <a href="{% url 'resolve_request' request.id %}" class="btn btn-success btn-sm">Resolve</a>
+              {% endif %}
+              <a href="{% url 'edit_request' request.pk %}" class="btn btn-primary btn-sm">Edit</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if requests.has_other_pages %}
+      <nav aria-label="Service Requests Pagination">
+        <ul class="pagination justify-content-center">
+          {% if requests.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ requests.previous_page_number }}">Previous</a>
+            </li>
+          {% endif %}
+
+          <li class="page-item disabled">
+            <span class="page-link">Page {{ requests.number }} of {{ requests.paginator.num_pages }}</span>
+          </li>
+
+          {% if requests.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ requests.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="?page={{ requests.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+{% endblock %}

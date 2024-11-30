@@ -1,0 +1,23 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit Service Request</h1>
+    <form method="POST" enctype="multipart/form-data" class="edit-request-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if is_admin %}
+        <div class="form-group">
+            <label for="status">Resolve Request:</label>
+            <select name="status" id="status" class="form-control">
+                <option value="pending" {% if service_request.status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="resolved" {% if service_request.status == 'resolved' %}selected{% endif %}>Resolved</option>
+            </select>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
